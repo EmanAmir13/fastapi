@@ -1,26 +1,39 @@
 from fastapi import FastAPI
 from typing import Optional
+from pydantic import BaseModel
 
 app = FastAPI()
 
 
+class Blog(BaseModel):
+    title: str
+    body: str
+    published: Optional[bool] = True
+
+
+@app.post('/blog')
+def create_blog(blog: Blog):
+    return {'data': f"Blog is created with title as {blog.title}"}
+
+
 @app.get('/blog')
-def index(limit=10, published: bool = True, sort: Optional[str] = None):
+def index(limit: int = 10, published: bool = True, sort: Optional[str] = None):
     if not published and not sort:
         return {"message": "The blog is not published"}
-    return {"message": f"The {limit} blogs are not published"}
+    return {"message": f"The {limit} blogs are fetched"}
 
 
-@app.get('/blogs/test/{id}')
-def show(id: int):
-    return {"blog": id}
-
-
-@app.get('/blogs/unpublished')
+@app.get('/blog/unpublished')
 def unpublished():
-    return {"blogs": "These are the unpublished blogs"}
+    return {'data': 'all unpublished blogs'}
 
 
-@app.get('/bolgs/{id}/comments')
-def comments(id: int):
-    return {"comments": f"the author with id {id} comments"}
+# Place /blog/{id}/comments BEFORE /blog/{id}
+@app.get('/blog/{id}/comments')
+def comments(id: int, limit: int = 10):
+    return {'data': ['comment1', 'comment2']}
+
+
+@app.get('/blog/{id}')
+def show(id: int):
+    return {'data': id}
