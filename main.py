@@ -6,7 +6,7 @@ app = FastAPI()
 
 @app.get('/blog')
 def index(limit=10, published: bool = True, sort: Optional[str] = None):
-    if not published:
+    if not published and not sort:
         return {"message": "The blog is not published"}
     return {"message": f"The {limit} blogs are not published"}
 
