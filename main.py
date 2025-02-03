@@ -18,7 +18,7 @@ def show(id: int):
 
 @app.get('/blogs/unpublished')
 def unpublished():
-    return {"blog": "these are the unpublished blogs"}
+    return {"blogs": "these are the unpublished blogs"}
 
 
 @app.get('/bolgs/{id}/comments')
