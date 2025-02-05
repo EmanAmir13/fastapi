@@ -12,3 +12,17 @@ class Show(BaseModel):
 
     class Config():
         orm_mode = True
+
+
+class User(BaseModel):
+    email: str
+    username: str
+    password: str
+
+
+class ShowUser(BaseModel):
+    email: str
+    username: str
+
+    class Config():
+        orm_mode = True
