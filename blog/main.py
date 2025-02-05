@@ -1,8 +1,10 @@
+from typing import List
+
 from fastapi import FastAPI, Depends, status, Response, HTTPException
 from sqlalchemy.orm import Session
 
 from blog.schemas import Blog
-from . import models
+from . import models, schemas
 from .database import engine, get_db
 
 app = FastAPI()
@@ -19,7 +21,7 @@ def create_blog(request: Blog, db: Session = Depends(get_db)):
     return new_blog
 
 
-@app.get('/blog')
+@app.get('/blog', response_model=List[schemas.Show])
 def get_blogs(db: Session = Depends(get_db)):
     return db.query(models.Blog).all()
 
@@ -44,7 +46,7 @@ def update_blog(id: int, request: Blog, db: Session = Depends(get_db)):
     return 'updated'
 
 
-@app.get('/blog/{id}', status_code=200)
+@app.get('/blog/{id}', status_code=200, response_model=schemas.Show)
 def get_blog_by_id(id: int, response: Response, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(id == models.Blog.id).first()
     if not blog:
